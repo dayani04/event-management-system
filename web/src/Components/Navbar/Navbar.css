@@ -1,0 +1,65 @@
+.navbar {
+    background-color: #7472ee; 
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+  }
+  
+  .navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #0c0235;
+  }
+  
+  .nav-link {
+    color: #02082e;
+    font-weight: 500;
+    text-decoration: none;
+  }
+  
+  .nav-link.active {
+    color: #8529c2; 
+  }
+  
+  .nav-link:hover {
+    color: #31045b; 
+  }
+  
+  .button-link {
+    background: none;
+    border: none;
+    color: #2a0455;
+    font-weight: 500;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  .button-link:hover {
+    color: #6e1dca;
+  }
+  
+  .button-link:focus {
+    outline: none;
+  }
+  
+  
+  .navbar-toggler {
+    border-color: rgba(0, 0, 0, 0.1); 
+  }
+  
+  .form-control {
+    border-radius: 0.5rem;
+  }
+  
+  .btn-outline-success {
+    color: #28a745;
+    border-color: #28a745;
+  }
+  
+  .btn-outline-success:hover {
+    background-color: #d191cb;
+    color: #fff;
+  }
+  
+  .navbar {
+    background-color: #cc81bb; 
+  }
+  
