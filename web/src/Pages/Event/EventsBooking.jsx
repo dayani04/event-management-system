@@ -69,30 +69,38 @@ function EventsBooking() {
       });
     }
   };
-
   const generatePDF = () => {
     const doc = new jsPDF();
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(18);
-    doc.setTextColor(0, 0, 0);
-    doc.text("Booking Details", 20, 20);
-
-    doc.setFontSize(14);
-    doc.text(`Event Name: ${bookingDetails.eventName}`, 20, 40);
-    doc.text(`Event Date: ${bookingDetails.eventDate}`, 20, 50);
-
-    doc.setFont("helvetica", "bold");
-    doc.text(`Total Price: ₹${bookingDetails.totalPrice}`, 20, 60);
-
-    doc.addPage();
-
-    doc.setFontSize(10);
-    doc.setTextColor(150, 150, 150);
-    doc.text("EVENTS BOOKING", 20, 280);
-    doc.text("Thank you for booking with us!", 20, 290);
-
-    doc.save("booking_details.pdf");
+  
+    const img = new Image();
+    img.src = "/assets/img/Diriyata Athwelak Ticket.jpg"; // Path to the image in the public folder
+    img.onload = function () {
+      // Add image to PDF (x, y, width, height)
+      doc.addImage(img, "JPEG", 20, 20, 170,60);
+  
+      // Set text after the image
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(18);
+      doc.setTextColor(0, 0, 0);
+      doc.text("Booking Details", 20, 90);
+  
+      doc.setFontSize(14);
+      doc.text(`Event Name: ${bookingDetails.eventName}`, 20, 110);
+      doc.text(`Event Date: ${bookingDetails.eventDate}`, 20, 120);
+  
+      doc.setFont("helvetica", "bold");
+      doc.text(`Total Price:$${bookingDetails.totalPrice}`, 20, 130);
+  
+      doc.addPage();
+      doc.setFontSize(10);
+      doc.setTextColor(150, 150, 150);
+      doc.text("EVENTS BOOKING", 20, 280);
+      doc.text("Thank you for booking with us!", 20, 290);
+  
+      doc.save("booking_details.pdf");
+    };
   };
+  
 
   return (
     <section>
@@ -102,7 +110,7 @@ function EventsBooking() {
           <div className="event-details">
             <h1>{event.name}</h1>
             <p><strong>Description:</strong> {event.description}</p>
-            <p><strong>Price:</strong> ₹{event.price}</p>
+            <p><strong>Price:</strong>${event.price}</p>
 
             {/* Date Picker for selecting booking date */}
             <div className="booking-date">
@@ -117,7 +125,7 @@ function EventsBooking() {
             </div>
 
             <div className="total-price">
-              <h3>Total Price: ₹{totalPrice}</h3>
+              <h3>Total Price:${totalPrice}</h3>
             </div>
 
             <button onClick={handleBooking}>Book Now</button>
@@ -134,7 +142,7 @@ function EventsBooking() {
             <h2>Booking Confirmed</h2>
             <p><strong>Event Name:</strong> {bookingDetails.eventName}</p>
             <p><strong>Booking Date:</strong> {bookingDetails.eventDate}</p>
-            <p><strong>Total Price:</strong> ₹{bookingDetails.totalPrice}</p>
+            <p><strong>Total Price:</strong>${bookingDetails.totalPrice}</p>
 
             <button onClick={generatePDF}>Download Booking Details (PDF)</button>
           </div>

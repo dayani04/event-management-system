@@ -7,12 +7,13 @@ import AdminRegister from './Pages/Admin/AdminRegister';
 import AdminEventDetails from './Pages/Admin/AdminEventDetails';
 import Footer from './Components/Footer/Footer';
 import HomePage from './Pages/HomePage/HomePage';
+import Navbar from './Components/Navbar/Navbar';
 
 function App() {
   return (
     <div className="App">
       <BrowserRouter>
-        {/* Wrap your Route components inside Routes */}
+        <Navbar/>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/Events" element={<Events />} />

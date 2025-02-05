@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import Swal from 'sweetalert2';
-import './AdminLogin.css';
-
+import React, { useState } from "react";
+import axios from "axios";
+import Swal from "sweetalert2";
+import "./AdminLogin.css";
 
 function AdminLogin() {
   const [loginData, setLoginData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
   const handleInputChange = (e) => {
@@ -21,39 +20,38 @@ function AdminLogin() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-     
-      const response = await axios.post('http://localhost:5000/api/admin/login', loginData);
+      // Ensure the correct backend API endpoint
+      const response = await axios.post("http://localhost:5000/admins/login", loginData);
 
       if (response.data.success) {
         Swal.fire({
-          title: 'Success!',
-          text: 'Login successful!',
-          icon: 'success',
-          confirmButtonText: 'Okay',
+          title: "Success!",
+          text: "Login successful!",
+          icon: "success",
+          confirmButtonText: "Okay",
         });
 
-        window.location.href = '/AdminDetails';  
+        window.location.href = "/AdminEventDetails";
       } else {
         Swal.fire({
-          title: 'Error!',
-          text: 'Invalid credentials!',
-          icon: 'error',
-          confirmButtonText: 'Try Again',
+          title: "Error!",
+          text: "Invalid credentials!",
+          icon: "error",
+          confirmButtonText: "Try Again",
         });
       }
     } catch (error) {
       Swal.fire({
-        title: 'Error!',
-        text: 'Error logging in!',
-        icon: 'error',
-        confirmButtonText: 'Try Again',
+        title: "Error!",
+        text: "Error logging in!",
+        icon: "error",
+        confirmButtonText: "Try Again",
       });
-      console.error('Error logging in:', error);
+      console.error("Error logging in:", error);
     }
   };
 
   return (
-    
     <div className="AL-login-container">
       <h2>Admin Login</h2>
       <form onSubmit={handleSubmit} className="login-form">
@@ -82,7 +80,6 @@ function AdminLogin() {
         <button type="submit" className="submit-btn">Login</button>
       </form>
     </div>
-    
   );
 }
 

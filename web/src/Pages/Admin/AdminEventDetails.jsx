@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
@@ -14,6 +15,8 @@ const EventsManagement = () => {
   const [isAddMode, setIsAddMode] = useState(false);
   const [isUpdateMode, setIsUpdateMode] = useState(false);
   const [editingEventId, setEditingEventId] = useState(null);
+
+  const navigate = useNavigate(); // Define navigate
 
   useEffect(() => {
     fetchEvents();
@@ -136,12 +139,19 @@ const EventsManagement = () => {
       description: ''
     });
     setEditingEventId(null);
+    setIsAddMode(false);
+    setIsUpdateMode(false);
   };
 
   return (
     <section className="container py-5">
-      <h1 className="text-center mb-4">Event Management</h1>
+      <h1 className="text-center mb-4">Event Management</h1> 
+      <br />
 
+      <button onClick={() => navigate("/AdminRegister")} className="btn btn-secondary">
+        Register Admin
+      </button>
+<br></br>  <br></br>
       {!isAddMode && !isUpdateMode && (
         <div className="d-flex justify-content-between mb-4">
           <button className="btn btn-primary" onClick={() => setIsAddMode(true)}>Add New Event</button>

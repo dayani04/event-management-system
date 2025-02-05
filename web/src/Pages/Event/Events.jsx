@@ -76,7 +76,7 @@ function Events() {
               <div className="event-details">
                 <h3 className="event-title">{event.name}</h3>
                 <p className="event-description">{event.description}</p>
-                <p className="event-price">Price: ₹{event.price}</p>     
+                <p className="event-price">Price:${event.price}</p>     
                 <Link to={`/book/${event._id}`}>
   <button className="book-now-button">
     Book Event
