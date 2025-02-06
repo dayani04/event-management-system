@@ -72,12 +72,24 @@ function EventsBooking() {
   const generatePDF = () => {
     const doc = new jsPDF();
     const qrCanvas = qrRef.current.querySelector("canvas");
+    
+    if (!qrCanvas) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'QR Code not found.',
+        icon: 'error',
+        confirmButtonText: 'Try Again',
+      });
+      return;
+    }
+    
     const qrImage = qrCanvas.toDataURL("image/png");
-
+  
     const img = new Image();
-    img.src = "/assets/img/Diriyata Athwelak Ticket.jpg";
+    img.src = "/assets/img/Diriyata Athwelak Ticket.jpg"; // Your event image path
+  
     img.onload = function () {
-      doc.addImage(img, "JPEG", 20, 20, 170, 60);
+      doc.addImage(img, "JPEG", 20, 20, 170, 60); // Your image dimensions
       doc.setFont("helvetica", "normal");
       doc.setFontSize(18);
       doc.setTextColor(0, 0, 0);
@@ -87,13 +99,24 @@ function EventsBooking() {
       doc.text(`Event Date: ${bookingDetails.eventDate}`, 20, 120);
       doc.setFont("helvetica", "bold");
       doc.text(`Total Price: $${bookingDetails.totalPrice}`, 20, 130);
-      
+  
+      // QR code image
       doc.addImage(qrImage, "PNG", 20, 140, 50, 50);
       
+      // Save the document
       doc.save("booking_details.pdf");
     };
+  
+    img.onerror = function () {
+      Swal.fire({
+        title: 'Error!',
+        text: 'Failed to load the event image.',
+        icon: 'error',
+        confirmButtonText: 'Try Again',
+      });
+    };
   };
-
+  
   return (
     <section>
     
