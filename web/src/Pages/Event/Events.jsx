@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import Navbar from "../../Components/Navbar/Navbar";
+
 import "./Events.css";
 
 function Events() {
@@ -61,7 +61,7 @@ function Events() {
 
   return (
     <section>
-      <Navbar />
+     
       <div className="event-container">
         {events.length === 0 ? (
           <h2>No events available</h2>

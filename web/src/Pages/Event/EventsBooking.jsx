@@ -1,29 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Swal from 'sweetalert2';
 import jsPDF from "jspdf";
-import Navbar from "../../Components/Navbar/Navbar";
-import "./EventsBooking.css"; // Ensure to include the CSS file
+import { QRCodeCanvas } from "qrcode.react";
+
+import "./EventsBooking.css";
 
 function EventsBooking() {
   const { eventid } = useParams();
   const [event, setEvent] = useState(null);
   const [bookingDetails, setBookingDetails] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(""); // State to store the selected date
-  const [totalPrice, setTotalPrice] = useState(0); // State for total price
+  const [selectedDate, setSelectedDate] = useState("");
+  const [totalPrice, setTotalPrice] = useState(0);
+  const qrRef = useRef(null);
 
   useEffect(() => {
     const fetchEvent = async () => {
       try {
         const response = await axios.get(`http://localhost:5000/api/events/${eventid}`);
         setEvent(response.data.event);
-        setTotalPrice(response.data.event.price); // Initialize totalPrice with the event's price
+        setTotalPrice(response.data.event.price);
       } catch (error) {
         console.error("Error fetching event details:", error);
       }
     };
-
     fetchEvent();
   }, [eventid]);
 
@@ -39,17 +40,15 @@ function EventsBooking() {
     }
 
     try {
-      // Post the booking details to the server
       await axios.post("http://localhost:5000/api/events/book", {
         eventId: eventid,
         selectedDate,
         totalPrice,
       });
 
-      // Set the booking details in the state
       setBookingDetails({
         eventName: event.name,
-        eventDate: selectedDate, // Use selected date
+        eventDate: selectedDate,
         totalPrice,
       });
 
@@ -69,50 +68,41 @@ function EventsBooking() {
       });
     }
   };
+
   const generatePDF = () => {
     const doc = new jsPDF();
-  
+    const qrCanvas = qrRef.current.querySelector("canvas");
+    const qrImage = qrCanvas.toDataURL("image/png");
+
     const img = new Image();
-    img.src = "/assets/img/Diriyata Athwelak Ticket.jpg"; // Path to the image in the public folder
+    img.src = "/assets/img/Diriyata Athwelak Ticket.jpg";
     img.onload = function () {
-      // Add image to PDF (x, y, width, height)
-      doc.addImage(img, "JPEG", 20, 20, 170,60);
-  
-      // Set text after the image
+      doc.addImage(img, "JPEG", 20, 20, 170, 60);
       doc.setFont("helvetica", "normal");
       doc.setFontSize(18);
       doc.setTextColor(0, 0, 0);
       doc.text("Booking Details", 20, 90);
-  
       doc.setFontSize(14);
       doc.text(`Event Name: ${bookingDetails.eventName}`, 20, 110);
       doc.text(`Event Date: ${bookingDetails.eventDate}`, 20, 120);
-  
       doc.setFont("helvetica", "bold");
-      doc.text(`Total Price:$${bookingDetails.totalPrice}`, 20, 130);
-  
-      doc.addPage();
-      doc.setFontSize(10);
-      doc.setTextColor(150, 150, 150);
-      doc.text("EVENTS BOOKING", 20, 280);
-      doc.text("Thank you for booking with us!", 20, 290);
-  
+      doc.text(`Total Price: $${bookingDetails.totalPrice}`, 20, 130);
+      
+      doc.addImage(qrImage, "PNG", 20, 140, 50, 50);
+      
       doc.save("booking_details.pdf");
     };
   };
-  
 
   return (
     <section>
-      <Navbar />
+    
       <div className="events-booking-container">
         {event ? (
           <div className="event-details">
             <h1>{event.name}</h1>
             <p><strong>Description:</strong> {event.description}</p>
-            <p><strong>Price:</strong>${event.price}</p>
-
-            {/* Date Picker for selecting booking date */}
+            <p><strong>Price:</strong> ${event.price}</p>
             <div className="booking-date">
               <label htmlFor="booking-date">Select Booking Date: </label>
               <input 
@@ -120,14 +110,12 @@ function EventsBooking() {
                 id="booking-date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
-                min={new Date().toISOString().split("T")[0]} // Prevent selecting past dates
+                min={new Date().toISOString().split("T")[0]}
               />
             </div>
-
             <div className="total-price">
-              <h3>Total Price:${totalPrice}</h3>
+              <h3>Total Price: ${totalPrice}</h3>
             </div>
-
             <button onClick={handleBooking}>Book Now</button>
           </div>
         ) : (
@@ -136,14 +124,15 @@ function EventsBooking() {
             <div className="spinner"></div>
           </div>
         )}
-
         {bookingDetails && (
           <div className="booking-details-box">
             <h2>Booking Confirmed</h2>
             <p><strong>Event Name:</strong> {bookingDetails.eventName}</p>
             <p><strong>Booking Date:</strong> {bookingDetails.eventDate}</p>
-            <p><strong>Total Price:</strong>${bookingDetails.totalPrice}</p>
-
+            <p><strong>Total Price:</strong> ${bookingDetails.totalPrice}</p>
+            <div ref={qrRef}>
+              <QRCodeCanvas value={`Event: ${bookingDetails.eventName}\nDate: ${bookingDetails.eventDate}\nPrice: $${bookingDetails.totalPrice}`} size={100} />
+            </div>
             <button onClick={generatePDF}>Download Booking Details (PDF)</button>
           </div>
         )}
